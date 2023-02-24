@@ -2,10 +2,10 @@ import { type NextFunction, type Request, type Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import User from "../../database/models/User";
-import type { UserCredentials } from "./types";
 import { loginUser } from "./usersControllers";
 import { CustomError } from "../../CustomError/CustomError";
 import mongoose from "mongoose";
+import { type UserCredentials } from "../types";
 
 const res = {
   status: jest.fn().mockReturnThis(),
@@ -31,7 +31,9 @@ describe("Given a loginUser controller", () => {
       );
       req.body = mockUser;
 
-      User.findOne = jest.fn().mockResolvedValue(undefined);
+      User.findOne = jest.fn().mockImplementationOnce(() => ({
+        exec: jest.fn().mockResolvedValue(undefined),
+      }));
 
       await loginUser(req, res as Response, next);
 
@@ -45,10 +47,12 @@ describe("Given a loginUser controller", () => {
       req.body = mockUser;
       const expectedBodyResponse = { token: "asdfdsfg" };
 
-      User.findOne = jest.fn().mockResolvedValue({
-        ...mockUser,
-        _id: new mongoose.Types.ObjectId(),
-      });
+      User.findOne = jest.fn().mockImplementationOnce(() => ({
+        exec: jest.fn().mockResolvedValue({
+          ...mockUser,
+          _id: new mongoose.Types.ObjectId(),
+        }),
+      }));
 
       bcrypt.compare = jest.fn().mockResolvedValue(true);
       jwt.sign = jest.fn().mockReturnValue("asdfdsfg");
@@ -69,10 +73,12 @@ describe("Given a loginUser controller", () => {
       );
       req.body = mockUser;
 
-      User.findOne = jest.fn().mockResolvedValue({
-        ...mockUser,
-        _id: new mongoose.Types.ObjectId(),
-      });
+      User.findOne = jest.fn().mockImplementationOnce(() => ({
+        exec: jest.fn().mockResolvedValue({
+          ...mockUser,
+          _id: new mongoose.Types.ObjectId(),
+        }),
+      }));
 
       bcrypt.compare = jest.fn().mockResolvedValue(false);
 

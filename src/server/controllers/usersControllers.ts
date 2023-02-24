@@ -3,7 +3,8 @@ import jwt from "jsonwebtoken";
 import { type NextFunction, type Request, type Response } from "express";
 import { CustomError } from "../../CustomError/CustomError";
 import User from "../../database/models/User";
-import { type CustomJwtPayload, type UserCredentials } from "./types";
+import { type CustomJwtPayload } from "./types";
+import { type UserCredentials } from "../types";
 
 export const loginUser = async (
   req: Request<
@@ -16,8 +17,10 @@ export const loginUser = async (
 ) => {
   const { password, username } = req.body;
 
+  const userToFind = username.toString();
+
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username: userToFind }).exec();
 
     if (!user) {
       const error = new CustomError(
