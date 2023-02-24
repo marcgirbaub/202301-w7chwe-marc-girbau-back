@@ -7,8 +7,6 @@ module.exports = {
   collectCoverageFrom: [
     "src/**/*.ts",
     "!src/index.ts",
-    "!src/react-app-env.d.ts",
-    "!src/setupTests.ts",
     "!src/server/index.ts",
     "!src/server/startServer.ts",
     "!src/loadEnvironment.ts",
