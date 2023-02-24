@@ -18,7 +18,7 @@ const userSchema = new Schema({
   location: {
     type: String,
   },
-  dateOfBirth: {
+  age: {
     type: String,
   },
   avatar: {
