@@ -9,7 +9,7 @@ const res = {
 const req = {} as Request;
 const next = jest.fn() as NextFunction;
 
-afterEach(() => jest.clearAllMocks());
+beforeEach(() => jest.clearAllMocks());
 
 describe("Given a notFoundError middleware", () => {
   describe("When it receives a request", () => {
