@@ -1,4 +1,5 @@
 import createDebug from "debug";
+import chalk from "chalk";
 import { type NextFunction, type Request, type Response } from "express";
 import { CustomError } from "../../../CustomError/CustomError.js";
 
@@ -20,7 +21,7 @@ export const generalError = (
   res: Response,
   next: NextFunction
 ) => {
-  debug(error.message);
+  debug(chalk.red(error.message));
 
   const statusCode = error.statusCode || 500;
   const publicMessage = error.publicMessage || "Something went wrong";
