@@ -5,8 +5,9 @@ import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import connectDataBase from "../../database/connectDataBase";
 import User from "../../database/models/User";
-import { type UserStructure, type UserCredentials } from "../types";
+import { type UserCredentials, type UserRegisterCredentials } from "../types";
 import { app } from "..";
+import { upload } from "./utils";
 
 let mongodbServer: MongoMemoryServer;
 
@@ -76,6 +77,40 @@ describe("Given a POST `/users/login` endpoint", () => {
         .expect(expectedStatus);
 
       expect(response.body).toHaveProperty("error", expectedErrorMessage);
+    });
+  });
+});
+
+describe("Given a POST /users/register endpoint", () => {
+  const registerUrl = "/users/register";
+
+  describe("When it receives a request with a user to register properly", () => {
+    test("Then it should response with a message `The user has been created`", async () => {
+      const newUser: UserRegisterCredentials = {
+        passwordConfirmation: "assdsddafasda",
+        email: "asdfasdf",
+        username: "sadfsdf",
+        password: "assdsddafasda",
+        location: "sadfsadf",
+        age: "sadfsadf",
+        avatar: "asdfasdf",
+      };
+
+      const expectedStatus = 201;
+
+      const response = await request(app)
+        .post(registerUrl)
+        .type("multipart/form-data")
+        .field("username", newUser.username)
+        .field("email", newUser.email)
+        .field("password", newUser.password)
+        .field("passwordConfirmation", newUser.passwordConfirmation)
+        .field("location", newUser.location)
+        .field("age", newUser.age)
+        .attach("avatar", Buffer.from("avatarinho", "utf-8"), {
+          filename: "avatarinho.jpg",
+        })
+        .expect(expectedStatus);
     });
   });
 });
