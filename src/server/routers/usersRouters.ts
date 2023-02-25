@@ -1,11 +1,21 @@
 import { validate } from "express-validation";
 import { Router } from "express";
-import { loginUser } from "../controllers/usersControllers.js";
+import { loginUser, registerUser } from "../controllers/usersControllers.js";
 import loginUserSchema from "../schemas/loginUserSchema.js";
+import registerUserSchema from "../schemas/registerUserSchema.js";
+import { upload } from "./utils.js";
 
 const loginRoute = "/login";
+const registerRoute = "/register";
 
 const usersRouter = Router();
+
+usersRouter.post(
+  registerRoute,
+  upload.single("avatar"),
+  validate(registerUserSchema, {}, { abortEarly: false }),
+  registerUser
+);
 
 usersRouter.post(
   loginRoute,
