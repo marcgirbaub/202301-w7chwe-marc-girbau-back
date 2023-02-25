@@ -5,7 +5,6 @@ import { CustomError } from "../../CustomError/CustomError.js";
 import User from "../../database/models/User.js";
 import { type CustomJwtPayload } from "./types";
 import { type UserRegisterCredentials, type UserCredentials } from "../types";
-import { debug } from "console";
 
 const hashingPasswordLength = 10;
 
