@@ -5,6 +5,7 @@ import { CustomError } from "../../CustomError/CustomError.js";
 import User from "../../database/models/User.js";
 import { type CustomJwtPayload } from "./types";
 import { type UserRegisterCredentials, type UserCredentials } from "../types";
+import { debug } from "console";
 
 const hashingPasswordLength = 10;
 
@@ -72,7 +73,8 @@ export const registerUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { username, password, email, passwordConfirmation } = req.body;
+  const { username, password, email, passwordConfirmation, age, location } =
+    req.body;
 
   if (passwordConfirmation !== password) {
     const error = new CustomError(
@@ -91,7 +93,14 @@ export const registerUser = async (
 
     const hashedPassword = await bcrypt.hash(password, hashingPasswordLength);
 
-    await User.create({ username, password: hashedPassword, email, avatar });
+    await User.create({
+      username,
+      password: hashedPassword,
+      email,
+      avatar,
+      age,
+      location,
+    });
 
     res.status(201).json({ message: "The user has been created" });
   } catch (error) {

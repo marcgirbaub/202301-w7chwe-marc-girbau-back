@@ -2,16 +2,16 @@ import { type NextFunction, type Request, type Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import User from "../../database/models/User";
-import { loginUser } from "./usersControllers";
+import { loginUser, registerUser } from "./usersControllers";
 import { CustomError } from "../../CustomError/CustomError";
 import mongoose from "mongoose";
-import { type UserCredentials } from "../types";
+import { type UserRegisterCredentials, type UserCredentials } from "../types";
 
 const res = {
   status: jest.fn().mockReturnThis(),
   json: jest.fn(),
 } as Partial<Response>;
-const req = {} as Request;
+const req = { file: { originalname: "asda" } } as Request;
 const next = jest.fn() as NextFunction;
 
 beforeEach(() => jest.clearAllMocks());
@@ -83,6 +83,83 @@ describe("Given a loginUser controller", () => {
       bcrypt.compare = jest.fn().mockResolvedValue(false);
 
       await loginUser(req, res as Response, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+});
+
+describe("Given a registerUser controller", () => {
+  describe("When it receives a request with a user to register correctly", () => {
+    test("Then it should call its status method with 200 and its json method with the message `The user has been created`", async () => {
+      const newUser: UserRegisterCredentials = {
+        passwordConfirmation: "asdafasda",
+        email: "asdfasdf",
+        username: "sadfsdf",
+        password: "asdafasda",
+        location: "sadfsadf",
+        age: "sadfsadf",
+        avatar: "asdfasdf",
+      };
+      const expectedMessage = { message: "The user has been created" };
+      const expectedStatusCode = 201;
+
+      req.body = newUser;
+      bcrypt.hash = jest.fn().mockResolvedValue("asdfasdg3425342dsafsdfg");
+      User.create = jest.fn().mockResolvedValue(newUser);
+
+      await registerUser(req, res as Response, next);
+
+      expect(res.status).toHaveBeenCalledWith(expectedStatusCode);
+      expect(res.json).toHaveBeenCalledWith(expectedMessage);
+    });
+  });
+
+  describe("When it receives a request with a user to register and the passwords don't match", () => {
+    test("Then it should call its next method with and error message `Passwords don't match`", async () => {
+      const newUser: UserRegisterCredentials = {
+        passwordConfirmation: "asdafasda",
+        email: "asdfasdf",
+        username: "sadfsdf",
+        password: "assdsddafasda",
+        location: "sadfsadf",
+        age: "sadfsadf",
+        avatar: "asdfasdf",
+      };
+      const expectedError = new CustomError(
+        "Passwords don't match",
+        400,
+        "Passwords don't match"
+      );
+
+      req.body = newUser;
+
+      await registerUser(req, res as Response, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+
+  describe("When it receives a request with a user to register without username", () => {
+    test("Then it should call its next method with and error message `The user couldn't be created`", async () => {
+      const newUser = {
+        passwordConfirmation: "assdsddafasda",
+        email: "asdfasdf",
+        password: "assdsddafasda",
+        location: "sadfsadf",
+        age: "sadfsadf",
+        avatar: "asdfasdf",
+      };
+      const expectedError = new CustomError(
+        "The user couldn't be created",
+        409,
+        "There was a problem creating the user"
+      );
+
+      req.body = newUser;
+      User.create = jest.fn().mockRejectedValue(undefined);
+
+      await registerUser(req, res as Response, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
     });

@@ -7,6 +7,8 @@ const registerUserSchema = {
     passwordConfirmation: Joi.string().min(8).required(),
     email: Joi.string().required(),
     avatar: Joi.string(),
+    location: Joi.string(),
+    age: Joi.string(),
   }),
 };
 
