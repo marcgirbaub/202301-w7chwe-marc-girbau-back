@@ -1,14 +1,18 @@
-import { type NextFunction, type Response } from "express";
-import User from "../../../database/models/User";
-import { type CustomRequest } from "./types";
+import { type NextFunction, type Response, type Request } from "express";
+import User from "../../../database/models/User.js";
+import { type UserId } from "./types.js";
 
 export const getUsersProfiles = async (
-  req: CustomRequest,
+  req: Request<Record<string, unknown>, Record<string, unknown>, UserId>,
   res: Response,
   next: NextFunction
 ) => {
+  const { userId } = req.body;
+
   try {
-    const usersProfiles = await User.find().select("-password").exec();
+    const usersProfiles = await User.find({ _id: { $ne: userId } })
+      .select("-password")
+      .exec();
 
     res.status(200).json({ usersProfiles });
   } catch (error) {
