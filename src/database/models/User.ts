@@ -28,7 +28,7 @@ const userSchema = new Schema({
     type: [Schema.Types.ObjectId],
   },
   enemies: {
-    types: [Schema.Types.ObjectId],
+    type: [Schema.Types.ObjectId],
   },
 });
 
