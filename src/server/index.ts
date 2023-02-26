@@ -6,7 +6,7 @@ import {
   generalError,
   notFoundError,
 } from "./middlewares/errorMiddlewares/errorMiddlewares.js";
-import usersRouter from "./routers/usersRouters.js";
+import usersRouter from "./routers/usersRouters/usersRouters";
 
 export const app = express();
 
