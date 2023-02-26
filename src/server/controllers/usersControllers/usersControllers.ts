@@ -1,10 +1,13 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { type NextFunction, type Request, type Response } from "express";
-import { CustomError } from "../../CustomError/CustomError.js";
-import User from "../../database/models/User.js";
+import { CustomError } from "../../../CustomError/CustomError.js";
+import User from "../../../database/models/User.js";
 import { type CustomJwtPayload } from "./types";
-import { type UserRegisterCredentials, type UserCredentials } from "../types";
+import {
+  type UserRegisterCredentials,
+  type UserCredentials,
+} from "../../types";
 
 const hashingPasswordLength = 10;
 

@@ -1,8 +1,11 @@
 import { validate } from "express-validation";
 import { Router } from "express";
-import { loginUser, registerUser } from "../controllers/usersControllers.js";
-import loginUserSchema from "../schemas/loginUserSchema.js";
-import registerUserSchema from "../schemas/registerUserSchema.js";
+import {
+  loginUser,
+  registerUser,
+} from "../../controllers/usersControllers/usersControllers.js";
+import loginUserSchema from "../../schemas/loginUserSchema.js";
+import registerUserSchema from "../../schemas/registerUserSchema.js";
 import { upload } from "./utils.js";
 
 const loginRoute = "/login";

@@ -3,11 +3,13 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
-import connectDataBase from "../../database/connectDataBase";
-import User from "../../database/models/User";
-import { type UserCredentials, type UserRegisterCredentials } from "../types";
-import { app } from "..";
-import { upload } from "./utils";
+import connectDataBase from "../../../database/connectDataBase";
+import User from "../../../database/models/User";
+import {
+  type UserCredentials,
+  type UserRegisterCredentials,
+} from "../../types";
+import { app } from "../..";
 
 let mongodbServer: MongoMemoryServer;
 
